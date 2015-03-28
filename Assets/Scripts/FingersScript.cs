@@ -24,26 +24,26 @@ public class FingersScript : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if(other.gameObject.name == "TunnelL")
+		if(other.gameObject.tag == "Tunnels")
 		{
 			touchRef.onTunnelL = true;
 		}
-		if(other.gameObject.name == "TunnelR")
+		if(other.gameObject.tag == "Tunnels")
 		{
 			touchRef.onTunnelR = true;
 		}
-		if(other.gameObject.name == "TunnelL 1")
+		if(other.gameObject.tag == "Tunnels")
 		{
 			touchRef.onSecondL = true;
 		}
-		if(other.gameObject.name == "TunnelR 1")
+		if(other.gameObject.tag == "Tunnels")
 		{
 			touchRef.onSecondR = true;
 		}
 	}
 	void OnTriggerExit2D(Collider2D other)
 	{
-		if(other.gameObject.name == "TunnelL")
+		if(other.gameObject.tag == "Tunnels")
 		{
 			if(touchRef.onSecondL)
 				return;
@@ -52,18 +52,18 @@ public class FingersScript : MonoBehaviour {
 			touchRef.onTunnelL = false;
 		}
 
-		if(other.gameObject.name == "TunnelL 1")
+		if(other.gameObject.tag == "Tunnels")
 		{
 			touchRef.OnTriggerExit2Dchild();
 			touchRef.onTunnelL = false;
 		}
 
-		if(other.gameObject.name == "TunnelR 1")
+		if(other.gameObject.tag == "Tunnels")
 		{
 			touchRef.OnTriggerExit2Dchild();
 			touchRef.onTunnelR = false;
 		}
-		if(other.gameObject.name == "TunnelR")
+		if(other.gameObject.tag == "Tunnels")
 		{
 			if(touchRef.onSecondR)
 				return;

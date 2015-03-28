@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CameraScroll : MonoBehaviour
 {
 	Hashtable ht = new Hashtable();
+	public Transform tunnelL;
+	public Transform tunnelR;
 
 	void Awake()
 	{
