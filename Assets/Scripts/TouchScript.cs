@@ -7,10 +7,8 @@ public class TouchScript : MonoBehaviour
 	private Touch touch1, touch2;
 	private CameraScroll scrollRef;
 
-	public bool onTunnelL, onTunnelR;
+	public bool onTunnelL, onTunnelR, gameStarted = false;
 	public GameObject resetButton;
-	public bool onSecondR, onSecondL;
-
 	
 	void Start () 
 	{
@@ -27,13 +25,26 @@ public class TouchScript : MonoBehaviour
 
 	void Update ()
 	{
-		if (onTunnelL && onTunnelR)
+		if (onTunnelL && onTunnelR) // Game has started, raise flag and start Scrolling
 		{
-		
 			scrollRef.CameraSroll();
+			gameStarted = true;
 		}
+	
+		Cast (); // call the cast function, which checks for fingers colliding with tunnels
 
-		int numTouches = Input.touchCount;
+		int numTouches = Input.touchCount; // get number of fingers on screen
+
+		if(gameStarted == true){ // if game has started, if you let go of one tunnel game has ended
+			if(!onTunnelL || !onTunnelR){
+				resetButton.SetActive(true);
+				scrollRef.Stop(); //User lost, stop scrolling & scoring
+			}
+			if(numTouches != 2){ // if game started, and you raise one of your fingers, game ended
+				resetButton.SetActive(true);
+				scrollRef.Stop();//User lost, stop scrolling & scoring
+			}
+		}
 
 		if (numTouches == 0)
 		{
@@ -65,9 +76,52 @@ public class TouchScript : MonoBehaviour
 			}
     	 }
 	}
-	public 	void OnTriggerExit2Dchild()
+
+	/*
+	 *This is a helper function which uses Ray casting to evaluate if user's fingers are on tunnels or not
+	 *If user is on tunnel, it should notify and change variable onTunnelX to true. otherwise False.
+	 * 
+	 */
+	void Cast()                                                                                                                                        
 	{
-		resetButton.SetActive(true);
+		for (int i = 0; i < Input.touchCount; ++i)
+		{
+			Vector2 test = Camera.main.ScreenToWorldPoint(Input.GetTouch(i).position);
+			Vector2 touchPos = new Vector2(test.x, test.y);
+			onLeft(touchPos);
+			onRight(touchPos);
+
+		}
+	}
+	/*
+	 * Helps Cast()
+	 * */
+	void onLeft(Vector2 touchPos){
+		Collider2D tempL;
+		if (tempL = Physics2D.OverlapPoint (touchPos)) {
+			if(tempL.CompareTag("LeftTunnel")){
+			Debug.Log ("Hit Left tunnel");
+			onTunnelL = true;
+			}
+		}
+		else{
+			onTunnelL = false;
+		}
+	}
+	/*
+	 * Helps Cast()
+	 * */
+	void onRight(Vector2 touchPos){
+		Collider2D tempR;
+		if (tempR = Physics2D.OverlapPoint (touchPos)) {
+			if(tempR.CompareTag("RightTunnel")){
+				Debug.Log ("Hit Right tunnel");
+				onTunnelR = true;
+			}
+		}
+		else{
+			onTunnelR = false;
+		}
 	}
 }
 

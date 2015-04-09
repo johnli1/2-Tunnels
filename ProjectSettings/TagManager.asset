@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Finger1
   - Finger2
+  - LeftTunnel
+  - RightTunnel
   - Tunnels
   layers:
   - Default

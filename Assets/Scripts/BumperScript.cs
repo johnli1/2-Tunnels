@@ -5,10 +5,8 @@ public class BumperScript : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag == "Tunnels") {
-			Destroy (other.gameObject.transform.parent.gameObject);
-		} else {
-			Destroy(other.gameObject);
-		}
+		// considering the location of the bumper, it can only collide with tunnels.
+		// so there's no need for logic here.
+		Destroy (other.gameObject);
 	}
 }
