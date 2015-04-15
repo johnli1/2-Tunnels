@@ -4,15 +4,15 @@ using System.Collections;
 public class CameraScroll : MonoBehaviour
 {
 	Hashtable ht = new Hashtable();
-
+	bool gameHasStopped = false;
+	private float speed = 4f; // old speed is 6f
 	// Jonathan Yaniv: Do we need those two fields?
 //	public Transform tunnelL;
 //	public Transform tunnelR;
-
 	void Awake()
 	{
 		ht.Add("y", 15f);
-		ht.Add ("speed", 2f); // old speed is 6f
+		ht.Add ("speed", speed); 
 		ht.Add("easetype", "linear");
 	}
 	void Start()
@@ -26,11 +26,16 @@ public class CameraScroll : MonoBehaviour
 	}
 	public void Stop(){ // this is called when the user has lost
 		iTween.Pause();
+		gameHasStopped = true;
 	}
-	public void CameraSroll()
+	public void ScrollCamera()
 	{
 		iTween.MoveBy(gameObject, ht);
-		ScoreManager.score = ScoreManager.score + 1; // score is being generated according to screen progress
+		/*
+		if (!gameHasStopped) {
+			ScoreManager.score = ScoreManager.score + 1; // score is being generated according to screen progress
+			StopAllCoroutines();
+		}*/
 	}
 
 	public void Restarter()

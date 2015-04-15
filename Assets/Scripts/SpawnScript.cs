@@ -4,21 +4,25 @@ using System.Collections;
 public class SpawnScript : MonoBehaviour {
 
 	// array of tunnel prefabs
-	public GameObject[] tunnelCollection;
+	public GameObject[] tunnelCollectionL;
+	public GameObject[] tunnelCollectionR;
+	public GameObject Background;
 
 	private int counter;
 	private byte[] spawnOrder;
-	private int[] fixedTunnels = new int[] {0,1,0,2,0,3};
+	private int[] fixedTunnelsL = new int[] {0,1,0,2,0,3};
+	private int[] fixedTunnelsR = new int[] {0,1,0,2,0,3};
 	public int i = 0;
-
+	public int k = 0;
+	public int j = 0;
 
 	/* IMPORTANT: need to find the right time that corresponds to the camera speed.
 	   otherwise evetually there will be TOO MANY clones. */
 	// in seconds
-	private const float spawnTime = 0.7f;
+	private const float spawnTime = 1f;
 
 	// current tunnel height (this will vary in the future)
-	public float tunnelHeight = 5f; // was 5.64 - changed for fixing other bug
+	public float tunnelHeight = 7f; // was 5.64 - changed for fixing other bug
 
 	// this is the coordinate for the next instantiation
 	private Vector3 positionForNextRightTunnel;
@@ -53,17 +57,19 @@ public class SpawnScript : MonoBehaviour {
 	 */
 	void Spawn(){
 		// Instantiate both left and right tunnels.
-		GameObject chosenTunnel = getNextTunnel ();
-		chosenTunnel.tag = "LeftTunnel";
-		Instantiate (chosenTunnel, positionForNextLeftTunnel, Quaternion.identity);
-		chosenTunnel.tag = "RightTunnel";
+		GameObject chosenTunnelL = getNextTunnelL ();
+		GameObject chosenTunnelR = getNextTunnelR ();
+		chosenTunnelL.tag = "LeftTunnel";
+		Instantiate (chosenTunnelL, positionForNextLeftTunnel, Quaternion.identity);
+		chosenTunnelR.tag = "RightTunnel";
 		//flipOnYAxis (chosenTunnel);
-		Instantiate (chosenTunnel, positionForNextRightTunnel, Quaternion.identity);
-		chosenTunnel.tag = "RightTunnel";
+		Instantiate (chosenTunnelR, positionForNextRightTunnel, Quaternion.identity);
+		chosenTunnelR.tag = "RightTunnel";
 		// Update the next position
-		positionForNextLeftTunnel.y += tunnelHeight;
-		positionForNextRightTunnel.y += tunnelHeight;
-
+		positionForNextLeftTunnel.y += tunnelHeight + 2.8f;
+		positionForNextRightTunnel.y += tunnelHeight + 2.8f;
+		Instantiate (Background, new Vector3 (0, j * 11, 0), Quaternion.identity);
+		j++;
 		// respawn in spawnTime seconds
 		Invoke ("Spawn", spawnTime);
 	}
@@ -74,7 +80,7 @@ public class SpawnScript : MonoBehaviour {
 	 * 
 	 * Currently it's random.
 	 */
-	GameObject getNextTunnel() {
+	GameObject getNextTunnelL() {
 		// random way
 		//return tunnelCollection[Random.Range(0, tunnelCollection.Length)];
 
@@ -82,11 +88,25 @@ public class SpawnScript : MonoBehaviour {
 		//return tunnelCollection[(byte)(spawnOrder [counter++] - '0')];
 
 		//fixed internally
-		if(i < fixedTunnels.Length){
-		return tunnelCollection [fixedTunnels[i++]];
+		if(i < fixedTunnelsL.Length){
+		return tunnelCollectionL [fixedTunnelsL[i++]];
 		}
 		i = 0;
-		return tunnelCollection [fixedTunnels[i]];
+		return tunnelCollectionL [fixedTunnelsL[i]];
+	}
+	GameObject getNextTunnelR() {
+		// random way
+		//return tunnelCollection[Random.Range(0, tunnelCollection.Length)];
+		
+		// by the file
+		//return tunnelCollection[(byte)(spawnOrder [counter++] - '0')];
+		
+		//fixed internally
+		if(k < fixedTunnelsR.Length){
+			return tunnelCollectionR [fixedTunnelsR[k++]];
+		}
+		k = 0;
+		return tunnelCollectionR [fixedTunnelsR[k]];
 	}
 	
 	void flipOnYAxis(GameObject tunnel) {

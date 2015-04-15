@@ -9,6 +9,7 @@ public class TouchScript : MonoBehaviour
 
 	public bool onTunnelL, onTunnelR, gameStarted = false;
 	public GameObject resetButton;
+	bool gameHasEnded = false;
 	
 	void Start () 
 	{
@@ -23,24 +24,36 @@ public class TouchScript : MonoBehaviour
 
 	}
 
+	void scorePoints(){
+		if (gameStarted){
+			if(!gameHasEnded){
+				ScoreManager.score = ScoreManager.score + 1; // score is being generated according to screen progress
+			}
+		}
+	}
+
 	void Update ()
 	{
 		if (onTunnelL && onTunnelR) // Game has started, raise flag and start Scrolling
 		{
-			scrollRef.CameraSroll();
+			scrollRef.ScrollCamera();
 			gameStarted = true;
 		}
-	
+
 		Cast (); // call the cast function, which checks for fingers colliding with tunnels
 
 		int numTouches = Input.touchCount; // get number of fingers on screen
-
+		scorePoints ();
 		if(gameStarted == true){ // if game has started, if you let go of one tunnel game has ended
 			if(!onTunnelL || !onTunnelR){
+				gameHasEnded = true;
 				resetButton.SetActive(true);
 				scrollRef.Stop(); //User lost, stop scrolling & scoring
+
+
 			}
 			if(numTouches != 2){ // if game started, and you raise one of your fingers, game ended
+				gameHasEnded = true;
 				resetButton.SetActive(true);
 				scrollRef.Stop();//User lost, stop scrolling & scoring
 			}
@@ -90,7 +103,7 @@ public class TouchScript : MonoBehaviour
 			Vector2 touchPos = new Vector2(test.x, test.y);
 			onLeft(touchPos);
 			onRight(touchPos);
-
+			//Debug.Log("Position of touch:" + touchPos);
 		}
 	}
 	/*
